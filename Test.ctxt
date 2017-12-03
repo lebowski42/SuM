@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Test()
+comment1.params=
+comment1.target=void\ run()
+comment2.params=pPanel
+comment2.target=void\ initFxLater(javafx.embed.swing.JFXPanel)
+comment3.params=
+comment3.target=void\ initSwingLater()
+comment4.params=
+comment4.target=void\ run()
+numComments=5
