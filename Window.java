@@ -15,6 +15,9 @@ import javafx.scene.shape.*;
 import javafx.event.*;
 import javafx.scene.input.*;
 
+// Utils
+import java.util.ArrayList;
+
 /**
  * Beschreiben Sie hier die Klasse Window.
  * 
@@ -32,6 +35,10 @@ public class Window
 
     private static String defaultFrameTitle = "SuM-Window";
 
+    // Mouse, Keyboard
+    private double mouseX, mouseY;
+    private ArrayList<char> keybuffer;
+    
     private boolean useDoubleBuffering;
     //private Color 
 
@@ -172,9 +179,9 @@ public class Window
         }
     }
 
-    /////////////////////////////////
-    //// called from Eventhandler////
-    /////////////////////////////////
+    //////////////////////////////////
+    //// called from Eventhandler ////
+    //////////////////////////////////
 
     // close window
     private void closeWindow()
@@ -183,4 +190,22 @@ public class Window
         if (this.equals(firstWindow))
             System.exit(0);
     }
+    
+    ///////////////////////////////
+    //// set- and get-Methods /////
+    ///////////////////////////////   
+    
+    protected double getMouseX(){
+        return this.mouseX;
+    }
+    
+    protected double getMouseY(){
+        return this.mouseY;
+    }
+    
+    protected void setMousePosition(double pX, double pY){
+            this.mouseX = pX;
+            this.mouseY = pY;
+    }
+    
 }
