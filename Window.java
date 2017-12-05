@@ -37,19 +37,17 @@ public class Window
 
     // Mouse, Keyboard
     private double mouseX, mouseY;
-    private ArrayList<char> keybuffer;
-    
+    boolean isMouseButtonDown = false;
+    int buttonNumber;
+    boolean wasDoubleClick = false;
+    private ArrayList<Character> keybuffer;
+
     private boolean useDoubleBuffering;
     //private Color 
 
     ///////////////////////////////////////////////////////////
     /////////// private classes for event handeling ///////////
     ///////////////////////////////////////////////////////////
-    private class MousePressed implements EventHandler<MouseEvent>{
-        public void handle (MouseEvent mouseEvent) {
-            System.out.println("X: " + mouseEvent.getX() + " Y: " + mouseEvent.getY());
-        }
-    }
 
     public Window()
     {
@@ -157,13 +155,62 @@ public class Window
         gc.fillRoundRect(110, 60, 30, 30, 10, Math.random()*10);
         Scene scene = new Scene(root, jFrame.getWidth(), jFrame.getHeight());
         // set JavaFX events
-        scene.setOnMousePressed(new MousePressed());
-
-            Circle circ = new Circle(40, 40, 30);
+        // Mouse
+        scene.setOnMousePressed(new EventHandler<MouseEvent>(){
+                public void handle (MouseEvent mouseEvent) {
+                    setMousePosition(mouseEvent);
+                    isMouseButtonDown = true;
+                }
+            });
+        scene.setOnMouseReleased(new EventHandler<MouseEvent>(){
+                public void handle (MouseEvent mouseEvent) {
+                    setMousePosition(mouseEvent);
+                    isMouseButtonDown = false;
+                    if(mouseEvent.getClickCount() > 1){
+                        wasDoubleClick = true;
+                    }else{
+                        wasDoubleClick = false;
+                    }
+                }
+            });
+        scene.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                public void handle (MouseEvent mouseEvent) {
+                    setMousePosition(mouseEvent);
+                    isMouseButtonDown = false;
+                }
+            });
+        scene.setOnMouseDragged(new EventHandler<MouseEvent>(){
+                public void handle (MouseEvent mouseEvent) {
+                    setMousePosition(mouseEvent);
+                    isMouseButtonDown = true;
+                }
+            });
+        scene.setOnMouseMoved(new EventHandler<MouseEvent>(){
+                public void handle (MouseEvent mouseEvent) {
+                    setMousePosition(mouseEvent);
+                    isMouseButtonDown = false;
+                }
+            });
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>(){
+                public void handle(KeyEvent keyEvent){
+                    String s = keyEvent.getCharacter();
+                    char c = (char)Integer.parseInt( s.substring(2), 16 );
+                    System.out.println("Es wurde folgende Taste gedrückt:\t" + c);
+                }
+            });
+        Circle circ = new Circle(40, 40, 30);
         Circle circ1 = new Circle(70, 50, 30);
-        ((Pane)scene.getRoot()).getChildren().add(circ);
-        ((Pane)scene.getRoot()).getChildren().add(canvas);
-        ((Pane)scene.getRoot()).getChildren().add(circ1);
+        ((Pane)scene.getRoot()).getChildren().
+
+        add(circ);
+        ((Pane)scene.getRoot()).
+        getChildren().
+
+        add(canvas);
+        ((Pane)scene.getRoot()).
+        getChildren().
+
+        add(circ1);
         pPanel.setScene(scene);
     }
 
@@ -190,22 +237,25 @@ public class Window
         if (this.equals(firstWindow))
             System.exit(0);
     }
-    
+
     ///////////////////////////////
     //// set- and get-Methods /////
     ///////////////////////////////   
-    
+
     protected double getMouseX(){
         return this.mouseX;
     }
-    
+
     protected double getMouseY(){
         return this.mouseY;
     }
-    
-    protected void setMousePosition(double pX, double pY){
-            this.mouseX = pX;
-            this.mouseY = pY;
+
+    public void setMousePosition(MouseEvent pMouseEvent){
+        this.mouseX = pMouseEvent.getX();
+        this.mouseY = pMouseEvent.getY();
+        this.buttonNumber = 1;
+        if(pMouseEvent.getButton() == MouseButton.MIDDLE) this.buttonNumber = 2;
+        if(pMouseEvent.getButton() == MouseButton.SECONDARY) this.buttonNumber = 3;
     }
-    
+
 }
