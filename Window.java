@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.*;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 
 // JavaFX events
 import javafx.event.*;
@@ -31,7 +33,7 @@ public class Window
     public static Window topWindow;
     protected static int windowID;
     private Scene scene;
-    JFrame jFrame ;
+    private JFrame jFrame ;
 
     private static String defaultFrameTitle = "SuM-Window";
 
@@ -43,7 +45,11 @@ public class Window
     private ArrayList<Character> keybuffer;
 
     private boolean useDoubleBuffering;
-    //private Color 
+    //private Color
+    
+    
+    KeyEvent e;
+    String s;
 
     ///////////////////////////////////////////////////////////
     /////////// private classes for event handeling ///////////
@@ -51,7 +57,7 @@ public class Window
 
     public Window()
     {
-        this(0, 0, -1, -1, " " + (windowID + 1), false);
+        this(0, 0, -1, -1, defaultFrameTitle+" " + (windowID + 1), false);
     }
 
     public Window(boolean pMitDoubleBuffering)
@@ -125,9 +131,15 @@ public class Window
     // For internal use
     private void initSwing(int pLeft, int pTop, int pWidth, int pHeight, String pName){
         jFrame = new JFrame(pName);
+        // Fullscreen
+        if (pWidth == -1){
+            java.awt.Dimension dimension = jFrame.getToolkit().getScreenSize();
+            pWidth = dimension.width;
+            pHeight = dimension.height;
+        }
         jFrame.setBounds(pLeft, pTop, pWidth, pHeight);
         jFrame.setVisible(true);
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // set JFrame events
         jFrame.addWindowListener(new java.awt.event.WindowAdapter(){
                 public void windowClosing(java.awt.event.WindowEvent e)
@@ -193,20 +205,16 @@ public class Window
             });
         scene.setOnKeyPressed(new EventHandler<KeyEvent>(){
                 public void handle(KeyEvent keyEvent){
-                    String s = keyEvent.getCharacter();
-                    char c = (char)Integer.parseInt( s.substring(2), 16 );
-                    System.out.println("Es wurde folgende Taste gedrückt:\t" + c);
+                    s = keyEvent.getCharacter();
+                    //char c = (char) Integer.parseInt( s.substring(2), 16 );
+                    e=keyEvent;
+                    System.out.println("Es wurde folgende Taste gedrückt:\t" + s);
                 }
             });
         Circle circ = new Circle(40, 40, 30);
         Circle circ1 = new Circle(70, 50, 30);
-        ((Pane)scene.getRoot()).getChildren().
-
-        add(circ);
-        ((Pane)scene.getRoot()).
-        getChildren().
-
-        add(canvas);
+        ((Pane)scene.getRoot()).getChildren().add(circ);
+        ((Pane)scene.getRoot()). getChildren().add(canvas);
         ((Pane)scene.getRoot()).
         getChildren().
 
