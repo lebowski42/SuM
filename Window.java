@@ -12,13 +12,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.*;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
-import javafx.scene.paint.Color;
+import javafx.scene.paint.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.geometry.Insets;
 // JavaFX events
 import javafx.event.*;
+import javafx.beans.value.*;
 import javafx.scene.input.*;
 
 // Utils
@@ -36,7 +37,7 @@ public class Window
     public static Window firstWindow;
     public static Window topWindow;
     protected static int windowID;
-
+    
     private JFrame jFrame ;
 
     private Scene scene;
@@ -148,6 +149,7 @@ public class Window
         //jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // set JFrame events
         jFrame.addWindowListener(new java.awt.event.WindowAdapter(){
+                @Override
                 public void windowClosing(java.awt.event.WindowEvent e)
                 {
                     closeWindow();
@@ -156,8 +158,16 @@ public class Window
         JFXPanel jFXPanel = new JFXPanel();
         jFXPanel.setOpaque(true);
         jFrame.add(jFXPanel);
+        jFXPanel.addFocusListener(new java.awt.event.FocusAdapter() {
 
-
+                /**
+                 * {@inheritDoc}
+                 */
+                @Override
+                public void focusGained(java.awt.event.FocusEvent aE) {
+                    topWindow = Window.this;
+                }
+            });
         Platform.runLater(new Runnable(){
                 @Override
                 public void run() {
@@ -176,6 +186,7 @@ public class Window
         scene = new Scene(root, jFrame.getWidth(), jFrame.getHeight());
         this.setColor(this.bgColor);
         // set JavaFX events
+
         // Mouse
         scene.setOnMousePressed(new EventHandler<MouseEvent>(){
                 public void handle (MouseEvent mouseEvent) {
@@ -280,13 +291,33 @@ public class Window
     }
 
     public void setColor(Color pColor){
-        canvas.setStyle("-fx-background-color: white;");
         ((Pane)scene.getRoot()).setBackground(new Background(new BackgroundFill(pColor, CornerRadii.EMPTY, Insets.EMPTY)));
         this.bgColor = pColor;
     }
 
     public Color getColor(){
         return this.bgColor;
+    }
+
+    public void alwaysOnTop(boolean pOnTop){
+        jFrame.setAlwaysOnTop(pOnTop);
+    }
+
+    public void toFront(){
+        jFrame.toFront();
+        jFrame.repaint();
+    }
+
+    private void onFocus(){
+        topWindow = this;
+    }
+
+    public void clearWindow(){
+        canvas.getGraphicsContext2D().clearRect(0, 0, this.getWidth(), this.getHeight());
+    }
+
+    protected GraphicsContext g(){
+        return canvas.getGraphicsContext2D();
     }
 
     public void test(){
@@ -303,25 +334,25 @@ public class Window
             a--;
         }
     }
-    
+
     public void test2(int p){
         canvas.getGraphicsContext2D().setFontSmoothingType(null);
         double lw = 1;
         if(p==1){
             canvas.getGraphicsContext2D().setStroke(Color.WHITE);
             canvas.getGraphicsContext2D().setLineWidth(lw);
-        
+
         }
-            
+
         else  {
-            
+
             canvas.getGraphicsContext2D().setStroke(Color.BLACK);
             canvas.getGraphicsContext2D().setLineWidth(lw);
         }
 
         canvas.getGraphicsContext2D().strokeOval(50, 50,60,60);
         //canvas.getGraphicsContext2D().strokeLine(20,20,100,100);
-        
+
     }
 
 }

@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.params=
+comment0.target=Pen()
+comment0.text=\n\ Konstruktor\ f\u00FCr\ Objekte\ der\ Klasse\ Pen\n
+comment1.params=x1\ y1\ x2\ y2
+comment1.target=void\ drawLine(double,\ double,\ double,\ double)
+comment2.params=g
+comment2.target=void\ setState(javafx.scene.canvas.GraphicsContext)
+numComments=3
