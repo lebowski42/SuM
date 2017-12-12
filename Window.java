@@ -295,7 +295,7 @@ public class Window
         this.bgColor = pColor;
     }
 
-    public Color getColor(){
+    public Color getBgColor(){
         return this.bgColor;
     }
 
