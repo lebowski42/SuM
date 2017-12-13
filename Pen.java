@@ -39,7 +39,7 @@ public class Pen
     }
     
     protected void setState(GraphicsContext g){
-        
+       // o
     }
     
 }
