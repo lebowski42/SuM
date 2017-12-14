@@ -62,7 +62,7 @@ public class Pen
     
     public void erase() 
     {
-        this.currentNode = this.ERASEMODE;
+        this.currentNode = this.ERASEMODE; 
     }
 
     public void changeMode() 
