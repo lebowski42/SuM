@@ -10,7 +10,7 @@ public class Pen
 {
     protected double x,y;
     protected boolean isUp = true;
-    protected double angel = 0;
+    protected double angle = 0;
 
     protected Window myWindow;
     protected int currentNode;
@@ -40,6 +40,8 @@ public class Pen
         {          
             this.setState(g);       
             g.strokeLine(x1,y1,x2,y2);
+            this.x = x2;
+            this.y = y2;
         }
     }
 
@@ -55,11 +57,74 @@ public class Pen
 
     }
 
+    public void moveTo(double pX, double pY){
+        if(this.isUp){
+            this.drawLine(this.x, this.y, pX, pY);
+        }else{
+            this.x = pX;
+            this.y = pY;
+        }
+    }
+
+    public void forward(double pDistance){
+        double angleRad = this.angle * Math.PI/180;
+        double xNew = this.x + pDistance*Math.cos(angleRad);
+        double yNew = this.y + pDistance*Math.sin(angleRad);
+        if(this.isUp){
+            this.drawLine(this.x, this.y, xNew, yNew);
+        }else{
+            this.x = xNew;
+            this.y = yNew;
+        }
+    }
+
+    public void setAngle(double pAngle){
+        this.angle = pAngle%360;
+        if(this.angle <0){
+            this.angle = this.angle+360;       
+        }
+    }
+
+    public void turn(double pAngle){
+        this.angle = this.angle + pAngle%360;
+        if(this.angle <0){
+            this.angle = this.angle+360;       
+        }
+    }
+
+    public void turnTo(double pX, double pY){
+        if(pX != this.x || pY != this.y){
+            if(pX == this.x){
+                if(pY > this.y){
+                    this.angle = 270;
+                }else{
+                    this.angle = 90;
+                }
+            }else{
+                if(pY == this.y){
+                    if(pX > this.x){
+                        this.angle = 0;
+                    }else{
+                        this.angle = 180;
+                    }
+                }else{
+                    this.angle = Math.atan((pY - this.y) / (this.x - pX)) * 180 / Math.PI;
+                    if(pX < this.x){
+                        this.angle = this.angle + 180;
+                    }
+                    if(this.angle <0){
+                        this.angle = this.angle+360;       
+                    }
+                }
+            }
+        }
+    }
+
     public void normal() 
     {
         this.currentNode = this.NORMALMODE;
     }
-    
+
     public void erase() 
     {
         this.currentNode = this.ERASEMODE;
@@ -69,21 +134,25 @@ public class Pen
     {
         this.currentNode = this.XORMODE;
     }
-    
+
     public double getX()
     {
         return this.x;
     }
-    
+
     public double getY(){
         return this.y;
     }
+
+    public double getangle(){
+        return this.angle;
+    }   
 
     protected void setStandard(){
         this.x = 0;
         this.y = 0;
         this.isUp = true;
-        this.angel = 0;
+        this.angle = 0;
         this.currentNode = this.NORMALMODE;
         this.normal();
     }
