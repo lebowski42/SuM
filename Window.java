@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 
 // Everything in the JFrame ist from JavaFX
 import javafx.application.Platform;
+import java.util.concurrent.CountDownLatch;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.layout.Pane;
 import javafx.scene.Scene;
@@ -37,7 +38,7 @@ public class Window
     public static Window firstWindow;
     public static Window topWindow;
     protected static int windowID;
-    
+
     private JFrame jFrame ;
 
     private Scene scene;
@@ -57,10 +58,6 @@ public class Window
 
     KeyEvent e;
     String s;
-
-    ///////////////////////////////////////////////////////////
-    /////////// private classes for event handeling ///////////
-    ///////////////////////////////////////////////////////////
 
     public Window()
     {
@@ -93,12 +90,24 @@ public class Window
             firstWindow = this;
         useDoubleBuffering = pUseDoubleBuffering;
         // Init JFrame, then init FX
+        final CountDownLatch doneLatch = new CountDownLatch(1);
         SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    initSwing(pLeft, pTop, pWidth, pHeight, pName);
+
+                    try{
+                        initSwing(pLeft, pTop, pWidth, pHeight, pName);
+                    }finally{
+                        doneLatch.countDown();
+                    }
+
                 }
             });
+        try {
+            doneLatch.await();
+        } catch (InterruptedException e) {
+            // ignore exception
+        }
 
         /*hatPanel = (JPanel) this.getContentPane();
         hatPanel.setLayout(null); //dann funktioniert setSize und setLocation
@@ -131,8 +140,8 @@ public class Window
 
         //this.zeichneDich();
         //this.bearbeiteFokusErhalten();
-        this.delay(500);
-
+        //this.delay(500);
+        topWindow = Window.this;
     }
 
     // For internal use
@@ -168,6 +177,8 @@ public class Window
                     topWindow = Window.this;
                 }
             });
+        // Start init, wait until ready (latch)
+
         Platform.runLater(new Runnable(){
                 @Override
                 public void run() {
@@ -225,10 +236,13 @@ public class Window
             });
         scene.setOnKeyPressed(new EventHandler<KeyEvent>(){
                 public void handle(KeyEvent keyEvent){
-                    s = keyEvent.getCharacter();
-                    char c =  s.charAt(0);
+                    //String s = keyEvent.getCode().getName();
+                    String s = keyEvent.getText();
+                    char c = ' ';
+                    if(s.length() >0) c =  s.charAt(0);
+                    else c = ' ';
                     e=keyEvent;
-                    System.out.println("Es wurde folgende Taste gedrückt:\t" + Character.getNumericValue(c));                }
+                    System.out.println("Es wurde folgende Taste gedrückt:"+s+"\t"+(int)c);                }
             });
         Circle circ = new Circle(40, 40, 30);
         Circle circ1 = new Circle(70, 50, 30);

@@ -1,5 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.*;
+import javafx.scene.text.Text;
 /**
  * Beschreiben Sie hier die Klasse Pen.
  * 
@@ -13,13 +14,14 @@ public class Pen
     protected double angle = 0;
 
     protected Window myWindow;
-    protected int currentNode;
+    protected int currentMode;
     protected Paint color=Color.BLACK;
     protected double linewidth = 1;
 
     protected static final int NORMALMODE = 0;
     protected static final int ERASEMODE = 1;
     protected static final int XORMODE = 2;
+    protected int delay = 10;
 
     /**
      * Konstruktor für Objekte der Klasse Pen
@@ -38,7 +40,7 @@ public class Pen
         GraphicsContext g = myWindow.g();
         if (g != null)
         {          
-            this.setState(g);       
+            this.setState(g);     
             g.strokeLine(x1,y1,x2,y2);
             this.x = x2;
             this.y = y2;
@@ -46,11 +48,11 @@ public class Pen
     }
 
     protected void setState(GraphicsContext g){
-        if(this.currentNode == NORMALMODE){
+        if(this.currentMode == NORMALMODE){
             g.setStroke(this.color);
             g.setLineWidth(this.linewidth);
         }
-        if(this.currentNode == ERASEMODE){
+        if(this.currentMode == ERASEMODE){
             g.setStroke(this.myWindow.getBgColor());
             g.setLineWidth(this.linewidth*2.5);
         }
@@ -58,7 +60,7 @@ public class Pen
     }
 
     public void moveTo(double pX, double pY){
-        if(this.isUp){
+        if(!this.isUp){
             this.drawLine(this.x, this.y, pX, pY);
         }else{
             this.x = pX;
@@ -69,8 +71,8 @@ public class Pen
     public void forward(double pDistance){
         double angleRad = this.angle * Math.PI/180;
         double xNew = this.x + pDistance*Math.cos(angleRad);
-        double yNew = this.y + pDistance*Math.sin(angleRad);
-        if(this.isUp){
+        double yNew = this.y - pDistance*Math.sin(angleRad);
+        if(!this.isUp){
             this.drawLine(this.x, this.y, xNew, yNew);
         }else{
             this.x = xNew;
@@ -90,6 +92,7 @@ public class Pen
         if(this.angle <0){
             this.angle = this.angle+360;       
         }
+        this.angle = this.angle%360;
     }
 
     public void turnTo(double pX, double pY){
@@ -119,20 +122,83 @@ public class Pen
             }
         }
     }
+    
+    public void drawRect(double pWidth, double pHeight){
+        GraphicsContext g = myWindow.g();
+        if (g != null)
+        {          
+            this.setState(g);       
+            g.strokeRect(this.x,this.y,pWidth,pHeight);
+        }
+        
+    }
+    
+     public void drawCircle(double pRadius){
+        GraphicsContext g = myWindow.g();
+        if (g != null)
+        {          
+            this.setState(g);       
+            g.strokeOval(this.x,this.y,pRadius, pRadius);
+        }
+        
+    }
+    
+    
+    public void write(String pText){
+        GraphicsContext g = myWindow.g();
+        if (g != null)
+        {          
+            this.setState(g);       
+            Text text = new Text(pText);
+            //https://stackoverflow.com/questions/13015698/how-to-calculate-the-pixel-width-of-a-string-in-javafx
+            g.strokeText(pText, this.x, this.y);
+            this.x = this.x+text.getLayoutBounds().getWidth();
+        }
+    }
+    
+     public void write(double pNumber){
+         this.write(""+pNumber);
+     }
+     
+      public void write(int pNumber){
+         this.write(""+pNumber);
+     }
+    
+     
+      public void write(long pNumber){
+         this.write(""+pNumber);
+     }
+     
+      public void write(byte pNumber){
+         this.write(""+pNumber);
+     }
+     
+      public void write(char pCharacter){
+         this.write(""+pCharacter);
+     }
+     
 
+    public void up(){
+        this.isUp = true;
+    }
+    
+    public void down(){
+        this.isUp = false;
+    }
+    
     public void normal() 
     {
-        this.currentNode = this.NORMALMODE;
+        this.currentMode = this.NORMALMODE;
     }
 
     public void erase() 
     {
-        this.currentNode = this.ERASEMODE;
+        this.currentMode = this.ERASEMODE;
     }
 
     public void changeMode() 
     {
-        this.currentNode = this.XORMODE;
+        this.currentMode = this.XORMODE;
     }
 
     public double getX()
@@ -144,7 +210,7 @@ public class Pen
         return this.y;
     }
 
-    public double getangle(){
+    public double getAngle(){
         return this.angle;
     }   
 
@@ -153,8 +219,12 @@ public class Pen
         this.y = 0;
         this.isUp = true;
         this.angle = 0;
-        this.currentNode = this.NORMALMODE;
+        this.currentMode = this.NORMALMODE;
         this.normal();
+    }
+    
+    public void setDelay(int pMilliSeconds){
+        this.delay = pMilliSeconds;
     }
 
 }

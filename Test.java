@@ -1,66 +1,71 @@
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 
 /**
- * @web http://java-buddy.blogspot.com/
+ * Beschreiben Sie hier die Klasse Test.
+ * 
+ * @author (Ihr Name) 
+ * @version (eine Versionsnummer oder ein Datum)
  */
-public class Test{
-    
-     Canvas canvas;
-     JFrame jFrame ;
-    
-    public Test(){
-         SwingUtilities.invokeLater(new Runnable() {
+public class Test
+{
+    // Instanzvariablen - ersetzen Sie das folgende Beispiel mit Ihren Variablen
+    private Window bild;
+    private Pen stift;
+    /**
+     * Konstruktor für Objekte der Klasse Test
+     */
+    public Test()
+    {bild = new Window(500,600);
+        stift = new Pen();
+        stift.moveTo(250,300);
+        stift.down();
+    }
 
-            @Override
-            public void run() {
-                initSwingLater();
-            }
+    /**
+     * Ein Beispiel einer Methode - ersetzen Sie diesen Kommentar mit Ihrem eigenen
+     * 
+     * @param  y    ein Beispielparameter für eine Methode
+     * @return        die Summe aus x und y
+     */
+    public void beispielMethode(int y)
+    {
+        int dec = 1;
+        y=25;
+        int i=0;
+        while(true){i++;
+            stift.erase();
+            //stift.drawCircle(50);
+            this.zeichnung();
+            bild.clearWindow();
+           // bild.clearWindow();
+            stift.forward(dec);
+            stift.normal();
+           // stift.drawCircle(50);
+            this.zeichnung();
+            try{
+                Thread.sleep(10);
+            }catch(InterruptedException e){} 
             
-        });
+            y=y+dec;
+            if(y>=450||y<=25)dec=-1*dec;
+            
+            System.out.println(stift.getX());
+        }
     }
     
     
-    private void initFxLater(JFXPanel pPanel){
-        Pane root = new Pane();
-        canvas = new Canvas(jFrame.getWidth(), jFrame.getHeight());
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.fillRoundRect(110, 60, 30, 30, 10, Math.random()*10);
-        Scene scene = new Scene(root, jFrame.getWidth(), jFrame.getHeight());
-        Circle circ = new Circle(40, 40, 30);
-        Circle circ1 = new Circle(70, 50, 30);
-        ((Pane)scene.getRoot()).getChildren().add(circ);
-        ((Pane)scene.getRoot()).getChildren().add(canvas);
-        ((Pane)scene.getRoot()).getChildren().add(circ1);
-        pPanel.setScene(scene);
-    }
-    
-    private void initSwingLater(){
-        jFrame = new JFrame("- JFrame -");
-        jFrame.setSize(540, 210);
-        jFrame.setVisible(true);
-        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        JFXPanel jFXPanel = new JFXPanel();
-        jFrame.add(jFXPanel);
-        
-        Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-                initFxLater(jFXPanel);
-            }
-        });
+    public void zeichnung(){
+            double x = stift.getX();
+            double y = stift.getY();
+            double a = stift.getAngle();
+            int i = 10;
+            while(i>0){
+                stift.forward(10);
+                stift.turn(100.0*i/100);
+                i--;
+        }
+        stift.moveTo(x,y);
+        stift.setAngle(a);
+            
         
     }
 }

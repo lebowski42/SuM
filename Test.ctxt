@@ -1,12 +1,10 @@
 #BlueJ class context
 comment0.params=
 comment0.target=Test()
-comment1.params=
-comment1.target=void\ run()
-comment2.params=pPanel
-comment2.target=void\ initFxLater(javafx.embed.swing.JFXPanel)
-comment3.params=
-comment3.target=void\ initSwingLater()
-comment4.params=
-comment4.target=void\ run()
-numComments=5
+comment0.text=\n\ Konstruktor\ f\u00FCr\ Objekte\ der\ Klasse\ Test\n
+comment1.params=y
+comment1.target=void\ beispielMethode(int)
+comment1.text=\n\ Ein\ Beispiel\ einer\ Methode\ -\ ersetzen\ Sie\ diesen\ Kommentar\ mit\ Ihrem\ eigenen\n\ \n\ @param\ \ y\ \ \ \ ein\ Beispielparameter\ f\u00FCr\ eine\ Methode\n\ @return\ \ \ \ \ \ \ \ die\ Summe\ aus\ x\ und\ y\n
+comment2.params=
+comment2.target=void\ zeichnung()
+numComments=3
